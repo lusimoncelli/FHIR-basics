@@ -33,24 +33,35 @@ def get_resource_from_hapi_fhir(resource_id, resource_type):
         print(response.json())
 
 def get_procedure_snomedct_code(procedure_name):
-    
+
     terminology_server_url = "https://r4.ontoserver.csiro.au/fhir"
-    search_url = f"{terminology_server_url}/CodeSystem/$lookup?system=http://snomed.info/sct&code={procedure_name}"
-    response = requests.get(search_url)
+    search_url = f"{terminology_server_url}/ValueSet/$expand"
+    
+    # Define the parameters for the $expand operation
+    params = {
+        "url": "http://snomed.info/sct?fhir_vs",  # Base URL for SNOMED CT ValueSet
+        "filter": procedure_name,  # Filter the codes by the procedure name
+        "count": 1  # Limit to one result
+    }
+    
+    # Perform the GET request with parameters
+    response = requests.get(search_url, params=params, headers={"Accept": "application/fhir+json"})
     
     if response.status_code == 200:
         results = response.json()
-        # Parse the result to get the SNOMED CT code and display text
-        for parameter in results.get("parameter", []):
-            if parameter["name"] == "code":
-                snomed_code = parameter["valueString"]
-            elif parameter["name"] == "display":
-                snomed_display = parameter["valueString"]
-                
-        return {"code": snomed_code, "display": snomed_display}
+        # Check if there are matching codes
+        if "expansion" in results and "contains" in results["expansion"] and len(results["expansion"]["contains"]) > 0:
+            code_entry = results["expansion"]["contains"][0]
+            return {
+                "code": code_entry["code"],
+                "display": code_entry["display"]
+            }
+        else:
+            print(f"No SNOMED CT code found for procedure: {procedure_name}")
     else:
         print(f"Failed to retrieve SNOMED CT code for {procedure_name}. HTTP Status: {response.status_code}")
-        return None
+    
+    return None
 
 def get_patient_id_by_name(patient_name):
 
