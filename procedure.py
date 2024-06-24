@@ -14,6 +14,9 @@ def create_procedure_resource(procedure_name = None, status = None, patient_name
     if snomed is None:
         raise ValueError(f"Could not find SNOMED CT code for procedure: {procedure_name}")
     
+    if patient_id is None:
+        raise ValueError(f"Could not find patient: {patient_name}")
+    
     procedure = Procedure(
         status = status,
         occurrenceDateTime = performed_date,
