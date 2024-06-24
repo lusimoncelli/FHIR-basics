@@ -73,7 +73,6 @@ def get_patient_id_by_name(given_name, family_name):
     if response.status_code == 200:
         results = response.json()
         if 'entry' in results and len(results['entry']) > 0:
-            print("results", results['entry'][0]['resource'])
             patient_id = results['entry'][0]['resource']['id']
             return patient_id
         else:
