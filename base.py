@@ -63,19 +63,20 @@ def get_snomedct_code(procedure_name):
     
     return None
 
-def get_patient_id_by_name(patient_name):
+def get_patient_id_by_name(given_name, family_name):
 
     hapi_fhir_url = "http://hapi.fhir.org/baseR4"
-    search_url = f"{hapi_fhir_url}/Patient?name={patient_name}"
+    search_url = f"{hapi_fhir_url}/Patient?family={family_name}&given={given_name}"
     
     response = requests.get(search_url, headers={"Accept": "application/fhir+json"})
     
     if response.status_code == 200:
         results = response.json()
         if 'entry' in results and len(results['entry']) > 0:
+            print("results", results['entry'][0]['resource'])
             patient_id = results['entry'][0]['resource']['id']
             return patient_id
         else:
-            raise ValueError(f"No patient found with name: {patient_name}")
+            raise ValueError(f"No patient found with name: {given_name} {family_name}")
     else:
-        raise ValueError(f"Failed to retrieve patient ID for {patient_name}. HTTP Status: {response.status_code}")
+        raise ValueError(f"Failed to retrieve patient ID for {given_name} {family_name}. HTTP Status: {response.status_code}")
