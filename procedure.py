@@ -11,7 +11,7 @@ def create_procedure_resource(procedure_name=None, status=None, given_name = Non
     
     
     if patient_id is None:
-        raise ValueError(f"Could not find patient: {patient_name}")
+        raise ValueError(f"Could not find patient: {f'{given_name} {family_name}'}")
     
     procedure = Procedure(
         status = status,
