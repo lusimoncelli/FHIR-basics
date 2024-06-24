@@ -32,7 +32,7 @@ def get_resource_from_hapi_fhir(resource_id, resource_type):
         print(f"Error al obtener el recurso: {response.status_code}")
         print(response.json())
 
-def get_procedure_snomedct_code(procedure_name):
+def get_snomedct_code(procedure_name):
 
     terminology_server_url = "https://r4.ontoserver.csiro.au/fhir"
     search_url = f"{terminology_server_url}/ValueSet/$expand"
@@ -57,7 +57,7 @@ def get_procedure_snomedct_code(procedure_name):
                 "display": code_entry["display"]
             }
         else:
-            print(f"No SNOMED CT code found for procedure: {procedure_name}")
+            print(f"No SNOMED CT code found for: {procedure_name}")
     else:
         print(f"Failed to retrieve SNOMED CT code for {procedure_name}. HTTP Status: {response.status_code}")
     
