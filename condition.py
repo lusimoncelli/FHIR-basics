@@ -4,11 +4,11 @@ from fhir.resources.coding import Coding
 from fhir.resources.reference import Reference
 from base import get_snomedct_code, get_patient_id_by_name
 
-def create_condition_resource(condition_name=None, clinical_status=None, verification_status=None, patient_name=None, onset_date=None):
+def create_condition_resource(condition_name=None, clinical_status=None, verification_status=None, given_name=None, family_name = None, onset_date=None):
     
     # Obtener ID del paciente
-    if patient_name:
-        patient_id = get_patient_id_by_name(patient_name)
+    if given_name and family_name:
+        patient_id = get_patient_id_by_name(given_name, family_name)
 
     
     # Crear instancia de Condition con clinicalStatus y subject (required)

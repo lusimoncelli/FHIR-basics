@@ -4,10 +4,10 @@ from fhir.resources.coding import Coding
 from fhir.resources.reference import Reference
 from base import get_snomedct_code, get_patient_id_by_name
 
-def create_procedure_resource(procedure_name=None, status=None, patient_name=None, performed_date=None):
+def create_procedure_resource(procedure_name=None, status=None, given_name = None, family_name = None, performed_date=None):
     
     # Obtener ID del paciente
-    patient_id = get_patient_id_by_name(patient_name)
+    patient_id = get_patient_id_by_name(given_name, family_name)
     
     
     procedure = Procedure(
@@ -15,11 +15,11 @@ def create_procedure_resource(procedure_name=None, status=None, patient_name=Non
         subject = Reference(reference=f'Patient/{patient_id}')
     )
 
-    # Add occurrenceDateTime if available
+    # Agregar occurrenceDateTime
     if performed_date:
         procedure.occurrenceDateTime = performed_date
 
-    # Add code for the procedure
+    #  Agregar codigo para el procedimiento
     if procedure_name:
         snomed = get_snomedct_code(procedure_name)
         if snomed is None:
